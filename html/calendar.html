@@ -1,0 +1,1601 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns:mso="urn:schemas-microsoft-com:office:office" xmlns:msdt="uuid:C2F41010-65B3-11d1-A29F-00AA00C14882">
+
+<head>
+    <!--[if gte mso 9]><xml>
+<mso:CustomDocumentProperties>
+<mso:ContentTypeId msdt:dt="string">0x010100C568DB52D9D0A14D9B2FDCC96666E9F2007948130EC3DB064584E219954237AF3900D6757760F1613A41AAA97050A3A1BB67</mso:ContentTypeId><mso:ContentType msdt:dt="string">Page</mso:ContentType><mso:PublishingContact msdt:dt="string"></mso:PublishingContact><mso:PublishingContactPicture msdt:dt="string">, </mso:PublishingContactPicture><mso:Approval_x0020_Level msdt:dt="string"></mso:Approval_x0020_Level><mso:Categories msdt:dt="string"></mso:Categories><mso:Assigned_x0020_To msdt:dt="string"></mso:Assigned_x0020_To><mso:_dlc_DocId msdt:dt="string">IRMBMP-2421-304</mso:_dlc_DocId><mso:_dlc_DocIdItemGuid msdt:dt="string">b3ebb2c6-e85d-459d-bdc8-5580b18a5caf</mso:_dlc_DocIdItemGuid><mso:_dlc_DocIdUrl msdt:dt="string">http://irm.m.state.sbu/sites/bmp/SPO/FMD/_layouts/DocIdRedir.aspx?ID=IRMBMP-2421-304, IRMBMP-2421-304</mso:_dlc_DocIdUrl></mso:CustomDocumentProperties></xml><![endif]-->
+    <title>IRM Budget Calendar</title>
+  
+    <link rel="stylesheet" type="text/css" href="http://irm.m.state.sbu/sites/bmp/SPO/FMD/web/html/SPO-FMD-Cal/css/page_loader.css" />
+    <link rel="stylesheet" type="text/css" href="http://irm.m.state.sbu/sites/bmp/SPO/FMD/web/html/SPO-FMD-Cal/css/calendar.css" />
+    <link rel="stylesheet" type="text/css" href="http://irm.m.state.sbu/sites/bmp/SPO/FMD/web/html/SPO-FMD-Cal/css/addEvent.css" />
+    <link rel="stylesheet" type="text/css" href="http://irm.m.state.sbu/sites/bmp/SPO/FMD/web/html/SPO-FMD-Cal/css/cal_events.css" />
+    <link rel="stylesheet" type="text/css" media="print" href="http://irm.m.state.sbu/sites/bmp/SPO/FMD/web/html/SPO-FMD-Cal/css/calendarPrint.css" />
+    <link rel="stylesheet" type="text/css" href="http://irm.m.state.sbu/sites/bmp/SPO/FMD/web/dependencies/jquery-timepicker/lib/bootstrap-datepicker.css" />
+    <link href="https://fonts.googleapis.com/css?family=Roboto+Condensed:300,300i,400,400i,700" rel="stylesheet" />
+	    
+    <!--[if IE]>
+		<script type="text/javascript" src="http://irm.m.state.sbu/sites/bmp/SPO/FMD/web/dependencies/indexOf_Polyfill.js"></script>
+		<script type="text/javascript" src="http://irm.m.state.sbu/sites/bmp/SPO/FMD/web/dependencies/no_JSON.js"></script>
+		<script type="text/javascript" src="http://irm.m.state.sbu/sites/bmp/SPO/FMD/web/dependencies/mediaPrint_Polyfill.js"></script>
+		<script type="text/javascript" src="http://irm.m.state.sbu/sites/bmp/SPO/FMD/web/dependencies/toISOString_Polyfill.js"></script>
+		<script type="text/javascript" src="http://irm.m.state.sbu/sites/bmp/SPO/FMD/web/dependencies/filter_Polyfill.js"></script>
+	<![endif]-->
+	
+    <script type="text/javascript" src="http://irm.m.state.sbu/sites/bmp/SPO/FMD/web/dependencies/jquery.min.js"></script>
+	<script type="text/javascript" src="http://irm.m.state.sbu/sites/bmp/SPO/FMD/web/dependencies/jquery-ui-min.js"></script>
+    <script type="text/javascript" src="http://irm.m.state.sbu/sites/bmp/SPO/FMD/web/dependencies/jquery.SPServices.min.js"></script>
+    <script type="text/javascript" src="http://irm.m.state.sbu/sites/bmp/SPO/FMD/web/dependencies/calendar/js/underscore-min.js"></script>
+    <script type="text/javascript" src="http://irm.m.state.sbu/sites/bmp/SPO/FMD/web/dependencies/calendar/js/calendar.js"></script>
+    <script type="text/javascript" src="http://irm.m.state.sbu/sites/bmp/SPO/FMD/web/dependencies/bootstrap-3.3.7-dist/js/bootstrap.js"></script>
+	<script type="text/javascript" src="http://irm.m.state.sbu/sites/bmp/SPO/FMD/web/dependencies/jquery-timepicker/lib/bootstrap-datepicker.js"></script>
+    
+    <script type="text/javascript">
+    	/** 
+    	 * This variable stores all globals for use in the calendar
+    	 * @global
+    	 * @returns {date} startDate - returns the start date for an event
+    	 * @returns {date} setStartDate - sets the start date for an event
+    	 * @returns {date} endDate - returns the end date for an event
+    	 * @returns {date} setEndDate - sets the end date for an event
+    	 * @returns {string} eventsString - returns all the events received from the list in a string
+    	 * @returns {string} setEventsString - sets all events from the list in a JSON format string
+    	 * @returns {string} url - returns the url (if any) for an event
+    	 * @returns {number} day - returns a day in milliseconds to be added to an event so that it shows properly on the calendar
+    	 * @returns {object} eventsObject - returns all the events in a JSON object
+    	 * @returns {object} setEventsObject - creates a JSON object from the events string
+    	 * @returns {object} calendar - returns the calendar object 
+    	 * @returns {object} setCalendar - sets the calendar object
+    	 * @returns {array} weekDays - returns an array of strings containing abbrieviated weekday names
+    	 * @returns {array} months - returns an array of strings containing month names
+    	 * @returns {array} listItems - returns an array of objects containing the events from the list
+    	 * @returns {array} setListItems - sets the array of objects that contain events from the list
+    	 * @returns {object} getEvent - returns a specific event
+    	 * @returns {object} setEvent - sets a specific event for use
+    	 * @returns {array} calIcons - returns an array of strings with the URLs of all ions used on the 3-month view of the calendar
+    	 * @returns {number} setCalIcons - increments the counter that keeps track of which icons have already been used
+    	 * @returns {object} sortEvents - sorts the events in chronological order for the calendar
+    	 * @returns {string} prevMonth - returns the previous month
+    	 * @returns {string} setPrevMonth - sets the previous month
+    	 * @returns {object} setEventEdit - sets the event currently being edited
+    	 * @returns {object} getCurrEvnt - returns the current event being edited
+    	 * @returns {boolean} getPermission - returns a boolean to see if a user may create and edit events
+    	 * @returns {boolean} setPermission - sets the boolean variable to see if a user may create and edit events
+		 */
+    	var globalVars = (function() {
+	        var startDate;
+	        var endDate;
+	        var eventsString = '[';
+	        var testURL = "http://example.com";
+	        var extraDay = 86400000; //adds an extra day to the end date of an event
+	        						//so it appears correctly on the calendar
+	        var eventsObj;
+	        var calendarObj;
+	        var weekDays = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+	        var months = ["January", "February", "March", "April", "May", "June", "July", "August", 
+	        	"September", "October", "November", "December"];
+	        var listItems = [];
+	        var newEvent = {
+	        	colorCode: "",
+	        	startDate: "",
+	        	endDate: "",
+	        	eventMedia: "",
+	        	eventName: "",
+	        	fullSum: ""
+	        };
+	        var icons = ["http://irm.m.state.sbu/sites/bmp/SPO/FMD/web/html/SPO-FMD-Cal/shapes/blank-bulky-star.png",
+	        		"http://irm.m.state.sbu/sites/bmp/SPO/FMD/web/html/SPO-FMD-Cal/shapes/blank-circle.png", 
+	        		"http://irm.m.state.sbu/sites/bmp/SPO/FMD/web/html/SPO-FMD-Cal/shapes/blank-hexagon.png", 
+	        		"http://irm.m.state.sbu/sites/bmp/SPO/FMD/web/html/SPO-FMD-Cal/shapes/blank-square.png", 
+	        		"http://irm.m.state.sbu/sites/bmp/SPO/FMD/web/html/SPO-FMD-Cal/shapes/blank-triangle.png", 
+	        		"http://irm.m.state.sbu/sites/bmp/SPO/FMD/web/html/SPO-FMD-Cal/shapes/filled-bulky-star.png", 
+					"http://irm.m.state.sbu/sites/bmp/SPO/FMD/web/html/SPO-FMD-Cal/shapes/filled-chevron.png", 
+					"http://irm.m.state.sbu/sites/bmp/SPO/FMD/web/html/SPO-FMD-Cal/shapes/filled-circle.png", 
+					"http://irm.m.state.sbu/sites/bmp/SPO/FMD/web/html/SPO-FMD-Cal/shapes/filled-diamond.png", 
+					"http://irm.m.state.sbu/sites/bmp/SPO/FMD/web/html/SPO-FMD-Cal/shapes/filled-hexagon.png", 
+					"http://irm.m.state.sbu/sites/bmp/SPO/FMD/web/html/SPO-FMD-Cal/shapes/filled-spiky-star.png", 
+					"http://irm.m.state.sbu/sites/bmp/SPO/FMD/web/html/SPO-FMD-Cal/shapes/filled-square.png",
+					"http://irm.m.state.sbu/sites/bmp/SPO/FMD/web/html/SPO-FMD-Cal/shapes/filled-star.png",
+					"http://irm.m.state.sbu/sites/bmp/SPO/FMD/web/html/SPO-FMD-Cal/shapes/filled-triad.png",
+					"http://irm.m.state.sbu/sites/bmp/SPO/FMD/web/html/SPO-FMD-Cal/shapes/filled-triangle.png"];
+			var iconCount = 0;
+			var prevMonth = 13; //the initial value is for January until it's set
+			var hasPermission = false;
+	        var currEvent;
+	        
+	        function _getStartDate() {
+	        	return startDate;
+	        }
+	        
+	        function _setStartDate(date) {
+	        	startDate = date;
+	        	return;
+	        }
+	        
+	        function _getEndDate() {
+	        	return endDate;
+	        }
+	        
+	        function _setEndDate(date) {
+	        	endDate = date;
+	        	return;
+	        }
+	        
+	        function _getEventsString() {
+	        	return eventsString;
+	        }
+    	
+    		function _setEventsString(events) {
+    			eventsString = events;
+    			return;
+    		}
+    		
+    		function _getURL() {
+    			return testURL;
+    		}
+    		    		
+    		function _getDay() {
+    			return extraDay;
+    		}
+    		
+    		function _getEventsObj() {
+    			return eventsObj;
+    		}
+    		
+    		function _setEventsObj() {
+				eventsObj = JSON.parse(eventsString);
+				return;
+    		}
+    		
+    		function _getCalendarObj() {
+    			return calendarObj;
+    		}
+    		
+    		function _getPrevMonth() {
+    			return prevMonth;
+    		}
+    		
+    		function _setCalendarObj(calendar) {
+    			calendarObj = calendar;
+    			return;
+    		}    		
+    		
+    		function _getWeekDays() {
+    			return weekDays;
+    		}
+    		
+    		function _getMonths() {
+    			return months;
+    		}
+    		
+    		function _getListItems() {
+    			return listItems;
+    		}
+    		
+    		function _setListItems(listItem) {
+    			listItems.push(listItem);
+    			return;
+    		}
+    		
+    		function _getNewEvent() {
+    			return newEvent;
+    		}
+    		
+    		function _getPermission() {
+    			return hasPermission;
+    		}
+    		
+    		function _setNewEvent(anEvent) {
+    			newEvent = anEvent;
+    			return;
+    		}
+    		
+    		function _calIcons() {
+    		    if (iconCount > 14) {
+    				iconCount = 0;
+    			}
+
+    			return icons[iconCount];
+    		}
+    		    		
+    		function _setCalIcons() {   			
+    			iconCount++;
+    			return;
+    		}
+    		
+    		function _sortEventList() {
+    			listItems.sort(function (a,b) {
+    				var dateOne = new Date(a.startDate).getTime();
+    				var dateTwo = new Date(b.startDate).getTime();
+    				return dateOne - dateTwo;
+    			});
+    		}
+    		
+    		function _setPrevMonth(month) {
+    			prevMonth = month;
+    			return;
+    		}
+    		
+    		function _getCurrEvent() {
+    			return currEvent;
+    		}
+    		
+    		function _setCurrEvent(editedEvnt) {
+    			currEvent = editedEvnt;
+    			return;
+    		}
+    		
+    		function _setPermission(yesNo) {
+    			hasPermission = yesNo;
+    			return;
+    		}
+    		    		   		    			
+    		return {
+    			startDate: function() { return _getStartDate(); },
+    			setStartDate: function(date) { return _setStartDate(date); },
+    			endDate: function() { return _getEndDate(); },
+    			setEndDate: function(date) { return _setEndDate(date); },
+    			eventsString: function() { return _getEventsString(); },
+    			setEventsString: function(events) { return _setEventsString(events); },
+    			url: function() { return _getURL(); },
+    			day: function() { return _getDay(); },
+    			eventsObject: function() { return _getEventsObj(); },
+    			setEventsObject: function() { return _setEventsObj(); },
+    			calendar: function() { return _getCalendarObj(); },
+    			setCalendar: function(calendar) { return _setCalendarObj(calendar); },
+    			weekDays: function() { return _getWeekDays(); },
+    			months: function() { return _getMonths(); },
+    			listItems: function() { return _getListItems(); },
+    			setListItems: function(listItem) { return _setListItems(listItem); },
+    			getEvent: function() { return _getNewEvent(); },
+    			setEvent: function(anEvent) { return _setNewEvent(anEvent); },
+    			calIcons: function() { return _calIcons(); },
+    			setCalIcons: function() { return _setCalIcons(); },
+    			sortEvents: function() { return _sortEventList(); },
+    			prevMonth: function() { return _getPrevMonth(); },
+    			setPrevMonth: function(month) { return _setPrevMonth(month); },
+    			setEventEdit: function(editedEvnt) { return _setCurrEvent(editedEvnt); },
+    			getCurrEvnt: function() { return _getCurrEvent(); },
+    			getPermission: function() { return _getPermission(); },
+    			setPermission: function(yesNo) { return _setPermission(yesNo); }
+    		}
+    	})(globalVars || {});
+    	
+    	/** 
+    	 * Gets an event to be edited and sets the object to a global variable
+    	 * @public
+    	 * @returns {object} Deferred object
+    	 */
+    	function getEventInfo(ID) {
+    		var currEvent;
+    		return $.Deferred(function(dfd) {
+		        $().SPServices({
+		            operation: "GetListItems",
+		            async: false,
+		            listName: "FMD_Timeline",
+		            webUrl: "http://irm.m.state.sbu/sites/bmp/SPO/FMD",
+		            CAMLViewFields: "<ViewFields>" +
+		            	"<FieldRef Name='ID' />" +
+		                "<FieldRef Name='Title' />" +
+		                "<FieldRef Name='Event_Start_Date' />" +
+		                "<FieldRef Name='Event_End_Date' />" +
+		                "<FieldRef Name='Event_Media' />" +
+		                "<FieldRef Name='Full_Content' />" +
+		                "<FieldRef Name='Color_Code' />" +
+		                "<FieldRef Name='Importance' />" +
+		                "</ViewFields>",
+		            CAMLQuery: "<Query><Where><Eq><FieldRef Name='ID'/><Value Type='Text'>"+ID+"</Value></Eq></Where></Query>",
+		            completefunc: function(xData, Status) {
+		                var totalItems = $(xData.responseXML).SPFilterNode("rs:data").attr("ItemCount");
+		                var currentCount = 0;
+		                $(xData.responseXML).SPFilterNode('z:row').each(function() {
+		                	var id = $(this).attr("ows_ID");
+		                    var eventLabel = $(this).attr("ows_Title");
+		                    var eventStart = $(this).attr("ows_Event_Start_Date");
+		                    var eventEnd = $(this).attr("ows_Event_End_Date");
+		                    var eventUrl = $(this).attr("ows_Event_Media") !== undefined ? $(this).attr("ows_Event_Media") : globalVars.url();
+		                    var eventContent = $(this).attr("ows_Full_Content");
+		                    var eventColor = $(this).attr("ows_Color_Code");
+		                    var eventImportance = $(this).attr("ows_Importance");
+		                    
+		                    currEvent = {
+		                    	ID: id,
+		                    	label: eventLabel,
+		                    	startTime: eventStart,
+		                    	endTime: eventEnd,
+		                    	Url: eventUrl,
+		                    	content: eventContent,
+		                    	colorCode: eventColor,
+		                    	importance: eventImportance
+		                    };             
+		                    
+		                    globalVars.setEventEdit(currEvent);
+		                });		            
+		            }
+				}).done(function() {
+					//console.log(" Event " + ID + " found and successfully retrieved!");
+					dfd.resolve();
+				}).fail(function() {
+					dfd.reject("A connection couldn't be made to the list: FMD_Timeline...");
+				});    		
+    		}).promise();
+    	}
+    	
+    	/**
+    	 * formats the dates that are stored in the SP list before they are displayed to the user
+    	 * @public
+    	 */
+    	function preDateFormatting() {
+    		var startDate = document.getElementById('editStartDate').value;
+    		var endDate = document.getElementById('editEndDate').value;
+   			
+   			startDate = startDate.split(" ")[0];
+   			endDate = endDate.split(" ")[0];
+   			startDate = startDate.split("-");
+   			endDate = endDate.split("-");
+   			
+			document.getElementById('editStartDate').value = startDate[1] + "/" + startDate[2] + "/" + startDate[0];
+			document.getElementById('editEndDate').value = endDate[1] + "/" + endDate[2] + "/" + endDate[0];
+			
+			return;
+       	}
+    	
+    	/**
+    	 * Shows the edit event screen to the user
+    	 * @public
+    	 */
+    	function showEventTab(permissions) {
+    		if (!permissions) {
+    			document.getElementById('editName').readOnly = true;
+    			document.getElementById('editStartDate').readOnly = true;
+    			document.getElementById('editEndDate').readOnly = true;
+    			document.getElementById('editColor').readOnly = true;
+    			document.getElementById('editUrl').readOnly = true;
+    			document.getElementById('editSum').readOnly = true;
+    			document.getElementById('editImportance').readOnly = true;
+    			document.getElementById('saveEdits').style.display = "none";
+    			document.getElementById('deleteItem').style.display = "none";
+    		}
+    		document.getElementById('editName').value =  globalVars.getCurrEvnt().label;
+    		document.getElementById('editStartDate').value = globalVars.getCurrEvnt().startTime;
+    		document.getElementById('editEndDate').value = globalVars.getCurrEvnt().endTime;
+    		document.getElementById('editColor').value = globalVars.getCurrEvnt().colorCode;
+    		if (globalVars.getCurrEvnt().Url === globalVars.url()) {
+    			document.getElementById('editUrl').value = "";
+    		} else {
+    			document.getElementById('editUrl').value = globalVars.getCurrEvnt().Url;
+    		}	   		
+	   		document.getElementById('editSum').value = globalVars.getCurrEvnt().content;
+	   		document.getElementById('editImportance').value = globalVars.getCurrEvnt().importance;
+
+			document.getElementById('edit-event-cntnr').style.display = "block";
+       		document.getElementById('calendarDiv').style.display = "none";
+       		document.getElementById('tableDiv').style.display = "none";
+       		document.getElementById('printDiv').style.display = "none";
+       		document.getElementById('prevBtn').style.display = "none";
+       		document.getElementById('todayBtn').style.display = "none";
+       		document.getElementById('nextBtn').style.display = "none";
+       		document.getElementById('add-event-cntnr').style.display = "none";
+       		document.getElementById('mthSelector').style.display = "none";
+
+			return;
+    	}
+    	
+    	/**
+    	 * initializes the event editing process by getting
+    	 * the chosen event details and showing the edit event screen
+    	 * @public
+    	 */
+    	function initEdit(ID, permissions) {
+	    		getEventInfo(ID).done(function() {
+	    			showEventTab(permissions);
+	    			preDateFormatting();
+	    			//console.log("Editing initialization complete!");
+	    		}).fail(function(errMsg) {
+	    			//console.log(errMsg);
+	    		});   		  		
+    		return;
+    	}
+    	
+    	/**
+    	 * checks to make sure that the user can add and edit events
+    	 * @public
+    	 * @returns {promise} Deferred object
+    	 */
+    	function chkRights() {
+    		var yesNo = false;
+    		return $.Deferred(function(dfd) {
+				$().SPServices({			 
+					operation: "GetGroupCollectionFromUser",			 
+					userLoginName: $().SPServices.SPGetCurrentUser(),			 
+					async: false,			 
+					completefunc: function (xData, Status) {			 
+						if ($(xData.responseXML).find("Group[Name='SPO FMD Owners']").length == 1) {			 
+							document.getElementById('addEventBtn').style.display = "block";
+							yesNo = true;
+						}	
+						globalVars.setPermission(yesNo);		 
+					}							
+				}).done(function() {
+					//console.log("Users' permissions successfully checked!");
+					dfd.resolve();
+				}).fail(function() {
+					dfd.reject("Couldn't check the users' groups...");
+				});    		
+    		}).promise();  
+    	}
+    	    	
+    	/** 
+    	 * Binds the elements of the DOM to actions
+         * @public
+         * @returns {promise} Deferred object
+		 */
+    	function bindElements() {
+    		return $.Deferred(function(dfd) {
+	       		var calendarDiv = document.getElementById('calendarDiv');
+	       		var tableDiv = document.getElementById('tableDiv');
+	       		var printDiv = document.getElementById('printDiv');
+	       		var prevBtn = document.getElementById('prevBtn');
+	       		var todayBtn = document.getElementById('todayBtn');
+	       		var nextBtn = document.getElementById('nextBtn');
+	       		var eventDiv = document.getElementById('add-event-cntnr');
+	       		var mthSelector = document.getElementById('mthSelector');
+	       		var editTab = document.getElementById('edit-event-cntnr');
+	
+		       	$('#printPage').bind('click', function() {				
+					window.print();
+		        });
+		       	$('#calSwitchViews').bind('click', function() {	       		
+		       		calendarDiv.style.display = "block";
+		       		tableDiv.style.display = "none";
+		       		printDiv.style.display = "none";
+		       		prevBtn.style.display = "block";
+		       		todayBtn.style.display = "block";
+		       		nextBtn.style.display = "block";
+		       		eventDiv.style.display = "none";
+		       		editTab.style.display = "none";
+		        });
+		       	$('#tblSwitchViews').bind('click', function() {	       		
+		       		calendarDiv.style.display = "none";
+		       		tableDiv.style.display = "block";
+		       		printDiv.style.display = "none";
+		       		prevBtn.style.display = "none";
+		       		todayBtn.style.display = "none";
+		       		nextBtn.style.display = "none";
+		       		eventDiv.style.display = "none";
+		       		editTab.style.display = "none";
+		        });
+		       	$('#prntSwitchViews').bind('click', function() {
+		       		calendarDiv.style.display = "none";
+		       		tableDiv.style.display = "none";
+		       		printDiv.style.display = "block";
+		       		prevBtn.style.display = "none";
+		       		todayBtn.style.display = "none";
+		       		nextBtn.style.display = "none";
+		       		eventDiv.style.display = "none";
+		       		mthSelector.style.display = 'block';
+		       		editTab.style.display = "none";
+		        });
+		       	$('#addEventBtn').bind('click', function() {
+		       		calendarDiv.style.display = "none";
+		       		printDiv.style.display = "none";
+		       		tableDiv.style.display = "none";
+		       		prevBtn.style.display = "none";
+		       		todayBtn.style.display = "none";
+		       		nextBtn.style.display = "none";	
+	    			eventDiv.style.display = "block";      
+	    			editTab.style.display = "none"; 
+		        });
+	            $('#btncancel').bind('click', function() { //clear obj, default to initialView
+					location.reload(true);
+				});
+				$('#btnsave').bind('click', function() {
+					if (initAdd()) {
+						saveInputs();
+						$.when(addEvent()).done(function() {
+							location.reload(true);
+						});					
+					}				
+				});
+		        $('.btn-group button[data-calendar-nav]').each(function() {	        	
+		            var $this = $(this);
+		            $this.click(function() {	  
+						globalVars.calendar().navigate($this.data('calendar-nav'));
+		            });
+		        });	
+		        $('.btn-group button[data-calendar-view]').each(function() {
+		            var $this = $(this);
+		            $this.click(function() {
+		                globalVars.calendar().view($this.data('calendar-view'));
+		            });
+		        });
+		        $('#events-in-modal').change(function() {
+		            var val = $(this).is(':checked') ? $(this).val() : null;
+		            globalVars.calendar().setOptions({
+		                modal: val
+		            });
+		        });
+		       	$('#eventStartDate').datepicker();
+		       	$('#eventEndDate').datepicker();
+				$('#editStartDate').datepicker();
+		       	$('#editEndDate').datepicker();
+	
+		       	$('#mthDropdwn').bind('change', function() {
+		       		var chosenMth = document.getElementById('mthDropdwn').value;
+		       		document.getElementById('3-mth-cals').innerHTML = "";
+		       		calPrintView(chosenMth);
+		       	});
+		       	$('#saveEdits').bind('click', function() {
+		       		if ((validateEditedInputs() <= 0) && validateEditedDates()) {
+		       			formatEditedDates();
+		       			formatEditedUrl();
+						$.when(updateEvent()).done(function() {
+							location.reload(true);
+						});	
+		       		}
+		       	});
+		       	$('#deleteItem').bind('click', function() {
+					$.when(deleteEvent()).done(function() {
+						location.reload(true);
+					});
+		       	});
+		       	$('#cancelEdits').bind('click', function() {
+		       		calendarDiv.style.display = "block";
+		       		tableDiv.style.display = "none";
+		       		printDiv.style.display = "none";
+		       		prevBtn.style.display = "block";
+		       		todayBtn.style.display = "block";
+		       		nextBtn.style.display = "block";
+		       		eventDiv.style.display = "none";
+		       		editTab.style.display = "none";
+		       	}); 
+		       	//console.log("Elements successfully bound!");
+		       	dfd.resolve();  		
+    		}).promise();
+    	}
+  	
+		/**
+		 * the function takes the passed string, breaks it into 
+		 * its month, day, and year. it then creates a new date object with
+		 * the pieces.
+         * @public
+		 * @param {string} startDateISO - the start date string in ISO format
+		 * @param {string} endDateISO - the end date string in ISO format
+         */	
+        function dateFormatter(startDateISO, endDateISO) {
+            endDateISO !== null || undefined ? endDateISO : startDateISO;
+
+            var startDateObj = new Date(startDateISO.slice(0, 4), 
+            	(startDateISO.slice(5, 7) - 1), startDateISO.slice(8, 10)).getTime();
+            var endDateObj = new Date(endDateISO.slice(0, 4), 
+            	(endDateISO.slice(5, 7) - 1), endDateISO.slice(8, 10)).getTime() + globalVars.day();
+
+            globalVars.setStartDate(startDateObj);
+            globalVars.setEndDate(endDateObj);
+
+            return;
+        }
+        
+        /**
+         * grabs data from SP and creates the calendar object
+         * @public
+         * @returns {promise} Deferred object
+         */
+        function getCalendarEvnts() {
+        	var eventsString = globalVars.eventsString();
+        	return $.Deferred(function(dfd) {
+		        $().SPServices({
+		            operation: "GetListItems",
+		            async: false,
+		            listName: "FMD_Timeline",
+		            webUrl: "http://irm.m.state.sbu/sites/bmp/SPO/FMD",
+		            CAMLViewFields: "<ViewFields>" +
+		            	"<FieldRef Name='ID' />" +
+		                "<FieldRef Name='Title' />" +
+		                "<FieldRef Name='Event_Start_Date' />" +
+		                "<FieldRef Name='Event_End_Date' />" +
+		                "<FieldRef Name='Event_Media' />" +
+		                "<FieldRef Name='Full_Content' />" +
+		                "<FieldRef Name='Color_Code' />" +
+		                "<FieldRef Name='Importance' />" +
+		                "</ViewFields>",
+		            completefunc: function(xData, Status) {
+		                var totalItems = $(xData.responseXML).SPFilterNode("rs:data").attr("ItemCount");
+		                var currentCount = 0;
+		                $(xData.responseXML).SPFilterNode('z:row').each(function() {
+		                	var ID = $(this).attr("ows_ID");
+		                    var eventLabel = $(this).attr("ows_Title");
+		                    var eventStart = $(this).attr("ows_Event_Start_Date");
+		                    var eventEnd = $(this).attr("ows_Event_End_Date");
+		                    var eventUrl = $(this).attr("ows_Event_Media") !== undefined ? $(this).attr("ows_Event_Media") : globalVars.url();
+		                    var eventContent = $(this).attr("ows_Full_Content");
+		                    var eventColor = $(this).attr("ows_Color_Code");
+		                    var eventImportance = $(this).attr("ows_Importance");
+		                                        
+		                    var listItem = {
+		                    	title: eventLabel,
+		                    	startDate: eventStart,
+		                    	endDate: eventEnd,
+		                    	content: eventContent,
+		                    	url: eventUrl,
+		                    	img: globalVars.calIcons(),
+		                    	importance: eventImportance
+		                    };
+		                    	
+		                    dateFormatter(eventStart, eventEnd);
+		
+		                    eventsString += '{"title":' + 
+		                        '"' + eventLabel + '",' +
+		                        '"id":"' + ID + '",' +
+		                        '"url":"' + eventUrl + '",' +
+		                        '"start":"' + globalVars.startDate() + '",' +
+		                        '"content":"' + eventContent + '",' +
+		                        '"color":"' + eventColor + '",' +
+		                        '"end":"' + globalVars.endDate() + '"}';
+		                        
+		                    globalVars.setListItems(listItem);
+		
+		                    currentCount++;
+		                    if (currentCount < totalItems) {
+		                        eventsString += ',';
+		                    } else {
+		                        eventsString += ']';
+		                        globalVars.setEventsString(eventsString);
+		                        globalVars.setEventsObject(); 
+		                    }
+		                	globalVars.setCalIcons();
+		                });
+		            }
+		        }).done(function() {
+		        	//console.log("All events successfully retrieved!");
+		        	dfd.resolve();
+		        }).fail(function() {
+		        	dfd.reject("A connection couldn't be made to FMD_Timeline...");
+		        });       	
+        	}).promise();        
+        }
+        
+        /**
+         * creates the calendar object and shows the calendar view
+         * @public
+         */
+        function createCalendarView() {   
+        	var eventsString = globalVars.eventsString();
+	        if (eventsString.length < 2) {
+	        	document.getElementById('tblSwitchViews').style.display = "none";
+	            eventsString += '{"title":' +
+	                '"' + "Filler Event" + '",' +
+	                '"id":"' + 999 + '",' +
+	                '"url":"' + "http://msnbc.com" + '",' +
+	                '"start":"' + 719640000000 + '",' +
+	                '"content":"' + "This is filler" + '",' +
+	                '"color":"' + "red" + '",' +
+	                '"end":"' + 719640060000 + '"}]';
+	                
+	     	    globalVars.setEventsString(eventsString);
+	            globalVars.setEventsObject();   	
+	        }
+	              
+	        globalVars.sortEvents();
+	        				
+	        var calendar = $("#calendar").calendar({
+	            tmpl_path: "http://irm.m.state.sbu/sites/bmp/SPO/FMD/web/dependencies/calendar/tmpls/",
+	            language: "en-US",
+	            view: 'month',
+	            //modal: "#events-modal", removed 10/5/2017 CB
+	            modal_type: "iframe",
+	            modal_title: function(event) {
+	                return event.title;
+	            },
+	            modal_body: function(event) {
+	            	var startDate = new Date(event.start);	       
+	            	return startDate;
+	            },
+	            events_source: globalVars.eventsObject(),
+	            onAfterEventsLoad: function(events) {
+	                if (!events) {
+	                    return;
+	                }
+	                var list = $('#eventlist');
+	                list.html('');
+	
+	                $.each(events, function(key, val) {
+	                    $(document.createElement('li'))
+	                        .html('<a href="' + val.url + '">' + val.title + '</a>')
+	                        .appendTo(list);
+	                });
+	            },
+	            onAfterViewLoad: function(view) {
+	                $('.page-header h2').text(this.getTitle());
+	                $('.btn-group button').removeClass('active');
+	                $('button[data-calendar-view="' + view + '"]').addClass('active');
+	            },
+	            classes: {
+	                months: {
+	                    general: 'label'
+	                }
+	            }
+	        });
+	        globalVars.setCalendar(calendar);
+	        
+	        return;        
+        }
+        
+        /**
+         * grabs data from SP and creates the calendar table list view
+         * @public	
+         * @returns {promise} Deferred object
+         */       
+        function createListView() {
+        	var arrayIndex = globalVars.listItems().length;
+	        var currRow = 1;
+            var tableItems = document.getElementById('reqTable'); //gets the div that houses the table element
+	        var defaultUrl = "example";        
+	        function isEven() { //checks if the current row of the table is even or not
+            	return currRow % 2 == 0; //if it is, the row will be white
+            }
+            
+           	return $.Deferred(function(dfd) {
+	            for (var index = 0; index < arrayIndex; index++) {      
+	            	var media = globalVars.listItems()[index].url;
+	            	var startDate = globalVars.listItems()[index].startDate;
+	            	var endDate = globalVars.listItems()[index].endDate;
+	            	var formattedStartDate = "";
+	            	var formattedEndDate = "";
+	            	var desc = globalVars.listItems()[index].content;
+	            	var eventName = globalVars.listItems()[index].title;
+	            	        
+	                if (media === undefined || media.indexOf(defaultUrl) !== -1) {
+	                	media = "No URL";
+	                }               
+	                         
+	                if (startDate === undefined) {
+	                	startDate = "No Start Date";
+	                } else {
+	                	startDate = startDate.split(" ")[0];
+	                	startDate = startDate.split("-");
+	                	formattedStartDate = startDate[1] + "/" + startDate[2] + "/" + startDate[0];
+	                }	                        	                        
+	                
+	                if (endDate === undefined) {
+	                	endDate = "No End Date";
+	                } else {
+	                	endDate = endDate.split(" ")[0];
+	                	endDate = endDate.split("-");
+	                	formattedEndDate = endDate[1] + "/" + endDate[2] + "/" + endDate[0];
+	                }              	                          
+	                                  
+	                if (desc === undefined) {
+	                	desc = "No Description";
+	                }
+	                
+	                var tableRow = document.createElement('tr');//creates the new table row
+	                tableRow.id = "row" + index;
+	                tableRow.style.backgroundColor = isEven() ? "#ffffff" : "#ededed"; //checks if the current row is even or odd
+	                tableItems.appendChild(tableRow);
+	
+	                var name = document.createElement('th');
+	                name.innerHTML = eventName;
+	                tableRow.appendChild(name);
+	
+	                var eventStartDate = document.createElement('th');
+	                eventStartDate.innerHTML = (formattedStartDate !== "" ? formattedStartDate : startDate);
+	                tableRow.appendChild(eventStartDate);
+	                
+	                var eventEndDate = document.createElement('th');
+	                eventEndDate.innerHTML = (formattedEndDate !== "" ? formattedEndDate : endDate);
+	                tableRow.appendChild(eventEndDate);
+	                
+	                var eventMedia = document.createElement('th');
+	                eventMedia.innerHTML = media;
+	                eventMedia.className = 'descText';
+	                tableRow.appendChild(eventMedia);
+	                var eventDesc = document.createElement('th');
+	                eventDesc.innerHTML = desc;
+	                eventDesc.className = 'descText';                                   
+	                tableRow.appendChild(eventDesc);
+	                
+	                currRow++;//increments the current row            	
+	            }
+	            //console.log("the calendar list view was successfully created!");
+	            dfd.resolve();           	
+           	}).promise();
+        }
+        
+        /**
+         * creates the side list for the 3-month view of the calendar
+         * @public
+         * @param {Date} firstDay - a date object that stores the first day of the month
+         * @param {Date} lastDay - a date object that stores the last day of the month
+         * @returns {string} eventStr - the HTML code that creates the side list view	
+         */
+        function createEventList(firstDay, lastDay) { 
+        	var eventStr = "<ul class='cal-list'>";
+        	var mthStart = firstDay.getTime();
+        	var mthEnd = lastDay.getTime();
+        	var fourHrs = 14400000;
+        	var fiveHrs = 18000000;
+        	var filteredList = [];
+        	        	        	
+    		filteredList = globalVars.listItems().filter(function(events) {
+    			var eventStartTime = events.startDate.slice(0,10).split("-");
+    			var eventEndTime = events.endDate.slice(0,10).split("-");
+    			var eventTimeObj = new Date(eventStartTime[1] + "/" + eventStartTime[2] + "/" + eventStartTime[0]).getTime();
+    			return ((eventTimeObj >= mthStart) && (eventTimeObj <= mthEnd));
+    		});
+    		    		
+        	var arrayLgth = filteredList.length;
+        	        	        	       	        	
+        	for (var index = 0; index < arrayLgth; index++) {
+        		if (filteredList[index].importance === "High") {
+	        		var currDateStr = filteredList[index].startDate.slice(0,10).split("-");
+	        		var currDateObj = new Date(currDateStr[1] + "/" + currDateStr[2] + "/" + currDateStr[0]).getTime();
+	        		var nextDateStr = filteredList[index].startDate.slice(0,10).split("-");
+	        		var nextDateObj = new Date(currDateStr[1] + "/" + currDateStr[2] + "/" + currDateStr[0]).getTime();	
+	        		var prevDateStr = filteredList[index].startDate.slice(0,10).split("-");
+	        		var prevDateObj = new Date(currDateStr[1] + "/" + currDateStr[2] + "/" + currDateStr[0]).getTime();
+	        		
+	        		var endDateStr = filteredList[index].endDate.slice(0,10).split("-");
+	        		var endDateObj = endDateStr[1] + "/" + endDateStr[2] + "/" + endDateStr[0];
+	        		var mod = 0;
+	        			    
+					if (filteredList[(index+1)] !== undefined) {
+			    		nextDateStr = filteredList[(index+1)].startDate.slice(0,10).split("-");
+			    		nextDateObj = new Date(nextDateStr[1] + "/" + nextDateStr[2] + "/" + nextDateStr[0]).getTime();		    					
+					}			    	
+	
+					if (filteredList[(index-1)] !== undefined) {
+			    		prevDateStr = filteredList[(index-1)].startDate.slice(0,10).split("-");
+			    		prevDateObj = new Date(prevDateStr[1] + "/" + prevDateStr[2] + "/" + prevDateStr[0]).getTime();		    					
+					}
+	        		
+	        		if ((prevDateObj === currDateObj || (currDateObj-fourHrs) === prevDateObj) || (currDateObj-fiveHrs) === prevDateObj) {
+	        			mod = filteredList[(index-1)] !== undefined ? -1 : 0;
+	        			filteredList[index].img = filteredList[(index+mod)].img;
+	        			eventStr += "<li>" + "<img src=" + filteredList[index].img + " width='12px' height='9px' />" + 
+	        				"<b>" + currDateStr[1] + "/" + currDateStr[2] + "/" + currDateStr[0] + " - " + endDateObj + ": </b>" +
+	        				filteredList[index].title + " - " + filteredList[index].content + "</li>"; 		        		
+	        		} else if ((currDateObj === nextDateObj) || ((currDateObj-fourHrs) === nextDateObj) || (currDateObj-fiveHrs) === nextDateObj) {
+						filteredList[index].img = filteredList[(index+mod)].img;
+						mod = filteredList[(index+1)] !== undefined ? 1 : 0;
+	        			eventStr += "<li>" + "<img src=" + filteredList[index].img + " width='12px' height='9px' />" + 
+	        				"<b>" + currDateStr[1] + "/" + currDateStr[2] + "/" + currDateStr[0] + " - " + endDateObj + ": </b>" +
+	        				filteredList[index].title + " - " + filteredList[index].content + "</li>";
+	        		} else {
+		     			eventStr += "<li>" + "<img src=" + filteredList[index].img + " width='12px' height='9px' />" + 
+		     				"<b>" + currDateStr[1] + "/" + currDateStr[2] + "/" + currDateStr[0] + " - " + endDateObj + ": </b>" +
+	    				filteredList[index].title + " - " + filteredList[index].content + "</li>";
+	        		}       		
+        		}  				
+        	}
+        	
+        	if (eventStr.length < 25) {
+       			eventStr += "<li><b>No high importance events scheduled for this month</b></li>";
+        	}
+        	
+        	eventStr += "</ul>";
+        	return eventStr;
+        }
+        
+        /**
+         * creates the 3-month view of the calendar for printing
+         * @public
+         * @param {promise} Deferred object 
+         */
+     	function calPrintView(chosenMth) {
+     		var printBox = document.getElementById('3-mth-cals');
+			var arrayLgth = globalVars.listItems().length;
+		    var placeholderDate = new Date();
+		    var yr = 0;
+			var mnth;
+			return $.Deferred(function(dfd) {
+				var daysInMonth = function(anyDateInMonth) {
+				    return new Date(anyDateInMonth.getYear(), anyDateInMonth.getMonth()+1,0).getDate();
+				};
+				
+				if ((chosenMth !== null) && (chosenMth !== 'noVal')) { //erase from 594 to 604 to fix
+					for (var mthCnt = 0; mthCnt < 12; mthCnt++) {
+						if (globalVars.months()[mthCnt] === chosenMth) {
+							yr = placeholderDate.getFullYear();
+							mnth = (mthCnt + 1);
+						}
+					}
+				} else {
+				    yr = placeholderDate.getFullYear();
+					mnth = placeholderDate.getMonth()+1;			
+				}
+			    						    			
+				for (var calIndex = 0; calIndex < 3; calIndex++) {
+					var actualMth = (mnth > 12 ? (mnth-12) : mnth);
+					globalVars.setPrevMonth(actualMth);
+					if (mnth >= 2) {
+						if ((globalVars.prevMonth() >= 0 && globalVars.prevMonth() < 2)) {
+								yr++;
+						}
+					}
+					var fourHrs = 14400000;
+				  	var fiveHrs = 18000000;  				
+				    var firstDayOfMonth = actualMth + "/1/" + yr;
+			    	var mthBegin = new Date(firstDayOfMonth);
+					var numOfDaysInMonth = daysInMonth(mthBegin);
+			    	var firstDayOfWeek = mthBegin.getDay();
+			    	var lastDayOfMonth = actualMth + "/" + numOfDaysInMonth + "/" + yr;
+			    	var mthEnd = new Date(lastDayOfMonth);
+			    	var calstr = "";
+					var headerStr = "";
+					var events = createEventList(mthBegin, mthEnd);				
+					
+					var calCntnr = document.createElement('div');
+					calCntnr.id = "cal-cntnr-" + actualMth;
+					calCntnr.style.position = "relative";
+					$(printBox).append(calCntnr);
+					
+					var innerCntnr = document.createElement('div');
+					innerCntnr.id = "innerCntnr-" + actualMth;
+					$(calCntnr).append(innerCntnr);
+					
+					var txtCntnr = document.createElement('div');
+					txtCntnr.className = "cal-list-txt";
+					txtCntnr.id = "txt-cntnr-" + actualMth;
+					txtCntnr.innerHTML = events;
+					$(calCntnr).append(txtCntnr);
+					
+					var monthBox = document.createElement('div');
+					monthBox.id = "month-" + actualMth;
+					monthBox.className = "cal-mth-hdr";
+					monthBox.innerHTML = globalVars.months()[(actualMth-1)] + " " + yr;
+					$(innerCntnr).append(monthBox);
+					
+				    var weekBox = document.createElement('div');
+				    weekBox.id = "week-" + actualMth + "-" + calIndex;
+				    weekBox.className = "weekHeader";
+				    $(innerCntnr).append(weekBox);
+				    
+					var calResults = document.createElement('div');
+					calResults.className = "cal-results";
+					calResults.id = "results-" + actualMth + "-" + calIndex;
+					
+					$(innerCntnr).append(calResults);
+					
+				    for(var wkDay = 0; wkDay < firstDayOfWeek; wkDay++) {
+				        calstr += "<div class='calCell empty'></div>";
+				    }
+				    		    				
+					for (var hdrIndex = 0; hdrIndex < 7; hdrIndex++) {
+						headerStr += "<div class='dayHeader' id='" + globalVars.weekDays()[hdrIndex] + "-" + hdrIndex + "'>" +
+								globalVars.weekDays()[hdrIndex] + "</div>";
+					}
+					
+				    $(weekBox).append(headerStr);
+				    			    
+				    for(var calCount = 0; calCount < numOfDaysInMonth; calCount++) {
+				    	var matchFnd = false;
+				    	var currentDay = new Date(actualMth + "/" + (calCount+1) + "/" + yr).getTime();
+				    	
+				        // if there are 7 cells create string - row
+				        if((calCount + firstDayOfWeek) % 7 == 0 && calCount > 0) {
+				            calstr += "<div class='row'>";
+				        }
+				        
+				        for (var index = 0; index < arrayLgth; index++) {	
+					    	var storedDate = globalVars.listItems()[index].startDate.substring(0,10);
+					    	storedDate = storedDate.split("-");
+					    	storedDate = new Date(storedDate[1] + "/" + storedDate[2] + "/" + storedDate[0]).getTime();
+							//add globalVars.listItems()[index].importance === "High" TODO
+							if (globalVars.listItems()[index].importance === "High" && 
+								(currentDay === storedDate) || (currentDay === (storedDate-fourHrs) || (currentDay === (storedDate-fiveHrs)))) {
+								matchFnd = true;
+								calstr += "<div class='calCell'>" + "<b class='cal-days'>" + (calCount + 1) + "</b>" + 
+									"<img class='cal-icons' src=" + globalVars.listItems()[index].img + " width='20px' height='20px'>" + "</div>"; 
+								break;
+							}
+				        }
+				        
+						if (!matchFnd) {
+							calstr += "<div class='calCell'>" + "<b>" + (calCount + 1) + "</b>" +"</div>";
+						}   
+				        			        
+				        // increments through each cell - making up each row
+				        if (calCount % 7 == 0 && calCount > 0) {
+				            calstr += "</div>";
+				        }			    
+				    }			    
+				    matchFnd = false;
+				    $(calResults).append(calstr);
+					mnth++;	
+				}	
+				globalVars.setPrevMonth(13); //resets the prevMonth variable	
+				//console.log("The 3-month view of the calendar was successfully created!");
+				dfd.resolve();		
+			}).promise();					
+        }
+        
+        /**
+         * adds a new event to the calendar
+         * @public
+         * @returns {promise} Deferred object
+         */
+        function addEvent() {
+        	return $.Deferred(function(dfd) {
+	            $().SPServices({
+	                operation: "UpdateListItems",
+	                batchCmd: "New",
+	                listName: "FMD_Timeline",
+	                async: false,
+	                webUrl: "http://irm.m.state.sbu/sites/bmp/SPO/FMD",
+	                valuepairs: [
+	                    ["Title", globalVars.getEvent().eventName],
+	                    ["Event_Start_Date", globalVars.getEvent().startDate],
+	                    ["Event_End_Date", globalVars.getEvent().endDate],
+	                    ["Event_Media", globalVars.getEvent().eventMedia],
+	                    ["Color_Code", globalVars.getEvent().colorCode],
+	                    ["Full_Content", globalVars.getEvent().fullSum],
+	                    ["Importance", globalVars.getEvent().importance]
+	                ],
+	                completefunc: null
+	            }).done(function() {
+	            	//console.log(globalVars.getEvent().eventName + " was added!");
+	            	dfd.resolve();
+	            }).fail(function() {
+	            	dfd.reject("The event couldn't be added to FMD_Timeline...");
+	            });       	
+        	}).promise();
+        }
+        
+        /**
+         * updates an existing event in the calendar
+         * @public
+         * @returns {promise} Deferred object
+         */
+        function updateEvent() {
+        	return $.Deferred(function(dfd) {
+	            $().SPServices({
+	                operation: "UpdateListItems",
+	                batchCmd: "Update",
+	                listName: "FMD_Timeline",
+	                async: false,
+	                ID: globalVars.getCurrEvnt().ID,
+	                webUrl: "http://irm.m.state.sbu/sites/bmp/SPO/FMD",
+	                valuepairs: [
+	                    ["Title", document.getElementById('editName').value],
+	                    ["Event_Start_Date", document.getElementById('editStartDate').value],
+	                    ["Event_End_Date", document.getElementById('editEndDate').value],
+	                    ["Event_Media", document.getElementById('editUrl').value],
+	                    ["Color_Code", document.getElementById('editColor').value],
+	                    ["Full_Content", document.getElementById('editSum').value],
+	                    ["Importance", document.getElementById('editImportance').value]
+	                ],
+	                completefunc: null
+	            }).done(function() {
+	            	//console.log(document.getElementById('editName').value + " was updated!");
+	            	dfd.resolve();
+	            }).fail(function() {
+	            	dfd.reject("This event in FMD_Timeline couldn't be updated...");
+	            });       	
+        	}).promise();
+        }
+        
+        /**
+         * deletes an event in the calendar
+         * @public
+         * @returns {promise} Deferred object
+         */
+        function deleteEvent() {
+        	return $.Deferred(function(dfd) {
+	            $().SPServices({
+	                operation: "UpdateListItems",
+	                batchCmd: "Delete",
+	                listName: "FMD_Timeline",
+	                async: false,
+	                ID: globalVars.getCurrEvnt().ID,
+	                webUrl: "http://irm.m.state.sbu/sites/bmp/SPO/FMD",
+	                completefunc: null
+	            }).done(function() {
+	            	//console.log("Event " + globalVars.getCurrEvnt().ID + " was deleted!");
+	            	dfd.resolve();
+	            }).fail(function() {
+	            	dfd.reject("This event win FMD_Timeline was unable to be deleted...");
+	            });       	
+        	}).promise();
+        }
+        
+        /**
+         * saves the nwew event information to an object for error checking
+         * @public
+		 */
+        function saveInputs() {
+        	var newEvent = {
+        		eventName: document.getElementById('eventName').value,
+        		startDate: document.getElementById('eventStartDate').value,
+        		endDate: document.getElementById('eventEndDate').value,
+        		//quickSum: document.getElementById('quickSum').value,
+        		colorCode: document.getElementById('colorCode').value,
+        		eventMedia: document.getElementById('eventMedia').value,
+        		fullSum: document.getElementById('fullSum').value, 
+        		importance: document.getElementById('eventImportance').value,       		
+        	};
+        	
+        	globalVars.setEvent(newEvent);
+        	return;
+        }
+        
+        /**
+         * Calls the validation methods. If the test for errors comes back 
+         * negative, then the users' input is formatted and passed to the 
+         * SP list.
+         * @public
+         * @returns {boolean}
+         */
+        function initAdd() {      
+        	//console.log('Checking for errors before adding');
+			if ((validateInputs() < 1) && validateDates()) {
+				formatDates();
+				formatUrl();
+				//console.log('No errors detected!');
+				return true;
+			} else {
+				//console.log("Error in users' input detected...");
+				return false;
+			}
+        }
+        
+        /**
+		 * creates the initial view of the calendar
+         * @public      
+		 */
+        function initialView() {
+    		document.getElementById('pageLoader').style.display = "none";
+    		document.getElementById('btnLocation').style.display = "block";
+    		document.getElementById('calendarDiv').style.display = "block";
+    		document.getElementById('printDiv').style.display = "none";
+    		document.getElementById('tableDiv').style.display = "none";
+    		document.getElementById('add-event-cntnr').style.display = "none";
+    		return;
+        }
+        
+        /**
+		 * formats validated dates into ISO date objects
+         * @public   
+		 */
+        function formatDates() {
+            var startDateString = String(document.getElementById('eventStartDate').value).split("/");
+            var endDateString = String(document.getElementById('eventEndDate').value).split("/");
+            var formattedStartDate = startDateString[2] + "/" + startDateString[0] + "/" + startDateString[1];
+            var formattedEndDate = endDateString[2] + "/" + endDateString[0] + "/" + endDateString[1];
+            var newStartDate = new Date(formattedStartDate).toISOString();
+            var newEndDate = new Date(formattedEndDate).toISOString();
+            
+            document.getElementById('eventStartDate').value = newStartDate;
+            document.getElementById('eventEndDate').value = newEndDate;
+        	return;
+        }
+        
+        /**
+		 * formats validated dates into ISO date objects
+         * @public   
+		 */
+        function formatEditedDates() {
+            var startDateString = String(document.getElementById('editStartDate').value).split("/");
+            var endDateString = String(document.getElementById('editEndDate').value).split("/");
+            var formattedStartDate = startDateString[2] + "/" + startDateString[0] + "/" + startDateString[1];
+            var formattedEndDate = endDateString[2] + "/" + endDateString[0] + "/" + endDateString[1];
+            var newStartDate = new Date(formattedStartDate).toISOString();
+            var newEndDate = new Date(formattedEndDate).toISOString();
+            
+            document.getElementById('editStartDate').value = newStartDate;
+            document.getElementById('editEndDate').value = newEndDate;
+        	return;
+        }
+        
+        /**
+         * adds "http://" to urls that do not have it
+         * @public     
+		 */
+        function formatUrl() {
+        	var http = /^((http|https|ftp):\/\/)/;
+        	if (!http.test(document.getElementById('eventMedia').value)) {
+        		document.getElementById('eventMedia').value = "" + "http://" +
+        			document.getElementById('eventMedia').value;
+        	}
+        	return;
+        }
+        
+        /**
+         * adds "http://" to urls that do not have it
+         * @public     
+		 */
+        function formatEditedUrl() {
+        	var http = /^((http|https|ftp):\/\/)/;
+        	if (!http.test(document.getElementById('editUrl').value)) {
+        		document.getElementById('editUrl').value = "" + "http://" +
+        			document.getElementById('editUrl').value;
+        	}
+        	return;
+        }
+        
+        /**
+		 * checks to make sure the dates are in the right format
+         * @public
+		 * @returns {boolean}   
+		 */
+        function validateDates() {
+            var dateConcat = /^\d{2}[./-]\d{2}[./-]\d{4}$/g;
+            var validStartDate = String(document.getElementById('eventStartDate').value).match(dateConcat);
+            var validEndDate = String(document.getElementById('eventEndDate').value).match(dateConcat);
+	        
+            if (validStartDate !== null || validEndDate !== null) {
+                return true;
+            } else {
+            	alert("The dates and/or times you have entered are invalid. Please check your inputs...");
+				return false;
+            }
+        }
+        
+        /**
+		 * checks to make sure the dates are in the right format
+         * @public
+		 * @returns {boolean}   
+		 */
+        function validateEditedDates() {
+            var dateConcat = /^\d{2}[./-]\d{2}[./-]\d{4}$/g;
+            var validStartDate = String(document.getElementById('editStartDate').value).match(dateConcat);
+            var validEndDate = String(document.getElementById('editEndDate').value).match(dateConcat);
+	        
+            if (validStartDate !== null || validEndDate !== null) {
+                return true;
+            } else {
+            	alert("The dates and/or times you have entered are invalid. Please check your inputs...");
+				return false;
+            }
+        }
+        
+        /**
+		 * checks all inputs to make sure they are not null and/or ill-formatted
+         * @public
+		 * @returns {number} errors - counts how many errors there are     
+		 */
+        function validateInputs() {
+    		var errors = 0;
+    		var counter = 0;
+    		var lineBreaks = /\r|\n/;
+    		var elements = ["eventName","eventStartDate",
+    				"eventEndDate","colorCode","fullSum", "eventImportance"];
+    		var arrayInd = elements.length;
+    		
+    		for (var index = 0; index < arrayInd; index++) {
+    			switch(document.getElementById(elements[index]).value) {
+					case null:
+						document.getElementById(elements[index]).style.backgroundColor = "#ff9e9e";
+						errors++;
+						break;
+					case undefined:
+						document.getElementById(elements[index]).style.backgroundColor = "#ff9e9e";
+						errors++;
+						break;
+					case "0":
+						document.getElementById(elements[index]).style.backgroundColor = "#ff9e9e";
+						errors++;
+						break;   						
+					case "":
+						document.getElementById(elements[index]).style.backgroundColor = "#ff9e9e";
+						errors++;
+						break;
+					case "MM/DD/YYYY":
+						document.getElementById(elements[index]).style.backgroundColor = "#ff9e9e";
+						errors++;
+						break;
+					default:
+						if (document.getElementById(elements[index]) !== null) {
+							document.getElementById(elements[index]).style.backgroundColor = "#fff";
+						}    						
+						break;  				
+    			}
+    		}
+    		if (document.getElementById('eventMedia').value === "") {
+    			document.getElementById('eventMedia').value = globalVars.url();
+    		}  	
+    		if (document.getElementById('fullSum').value.match(lineBreaks) !== null) {
+    			do {
+    				document.getElementById('fullSum').value = String(document.getElementById('fullSum').value).replace(lineBreaks, ", ");
+    				counter++;
+    				if (counter > 5) {
+    					break;
+    				}
+    			} while(document.getElementById('fullSum').value.match(lineBreaks) !== null);
+    		}
+	
+    		return errors;      
+        }
+        
+        /**
+		 * checks all inputs to make sure they are not null and/or ill-formatted
+         * @public
+		 * @returns {number} errors - counts how many errors there are     
+		 */
+        function validateEditedInputs() {
+    		var errors = 0;
+    		var counter = 0;
+    		var lineBreaks = /\r|\n/;
+    		var elements = ["editName","editStartDate","editEndDate",
+    				"editColor","editSum", "editImportance"];
+    		var arrayInd = elements.length;
+    		
+    		for (var index = 0; index < arrayInd; index++) {
+    			switch(document.getElementById(elements[index]).value) {
+					case null:
+						document.getElementById(elements[index]).style.backgroundColor = "#ff9e9e";
+						errors++;
+						break;
+					case undefined:
+						document.getElementById(elements[index]).style.backgroundColor = "#ff9e9e";
+						errors++;
+						break;
+					case "0":
+						document.getElementById(elements[index]).style.backgroundColor = "#ff9e9e";
+						errors++;
+						break;   						
+					case "":
+						document.getElementById(elements[index]).style.backgroundColor = "#ff9e9e";
+						errors++;
+						break;
+					case "MM/DD/YYYY":
+						document.getElementById(elements[index]).style.backgroundColor = "#ff9e9e";
+						errors++;
+						break;
+					default:
+						if (document.getElementById(elements[index]) !== null) {
+							document.getElementById(elements[index]).style.backgroundColor = "#fff";
+						}    						
+						break;  				
+    			}
+    		} 
+    		if (document.getElementById('editUrl').value === "") {
+    			document.getElementById('editUrl').value = globalVars.url();
+    		}   
+    		if (document.getElementById('editSum').value.match(lineBreaks) !== null) {
+    			do {
+    				document.getElementById('editSum').value = String(document.getElementById('editSum').value).replace(lineBreaks, ", ");
+    				counter++;
+    				if (counter > 5) {
+    					break;
+    				}
+    			} while(document.getElementById('editSum').value.match(lineBreaks) !== null);
+    		}
+ 		
+    		return errors;      
+        }
+        
+        /**
+         * Loads the needed modules to start the page
+         * @public
+         * @returns {promise} Deferred Object
+         */
+        function start() {
+        	var setup = [
+        		bindElements(),
+        		chkRights(),
+        		getCalendarEvnts(),
+        		createCalendarView(),
+        		createListView(),
+	    		calPrintView(null)    		
+        	];
+        	
+        	return $.Deferred(function(dfd) {
+	        	$.when.apply($, setup).done(function() {
+	        		//console.log("Necessary components successfully loaded!");
+	        		dfd.resolve();
+	        	}).fail(function(errMsg) {
+	        		dfd.reject(errMsg);
+	        	});        	
+        	}).promise();
+        }
+           	 	    	
+    	$(document).ready(function() {    	
+    		start().done(function() {
+    			initialView();
+    			//console.log("Initial view loaded!");
+    		}).fail(function(errMsg) {
+    			//console.log(errMsg);
+    		});	
+    	});
+    </script>
+</head>
+<body>
+	<div id="title-page">
+		<b id="title-header">SPO/FMD Calendar</b>
+		<h5 id="sub-title-hdr">IRM/BMP/SPO/FM</h5>
+	</div>
+	<div id="pageLoader" class="loader"></div>
+	<div id="btnLocation" class="btn-group pull-right form-inline">
+		<button id="addEventBtn" type="button" class="btn btn-primary-addEvnt btn-xs">Add Event</button>
+		<button id="calSwitchViews" type="button" class="btn btn-primary-switch btn-xs">Calendar View</button>
+		<button id="tblSwitchViews" type="button" class="btn btn-primary-switch btn-xs">Table View</button>
+		<button id="prntSwitchViews" type="button" class="btn btn-primary-switch btn-xs">3-Month View</button>
+		<button id="printPage" type="button" class="btn btn-primary-print btn-xs">Print</button>
+        <button id="prevBtn" type="button" class="btn btn-primary btn-xs" data-calendar-nav="prev"><< Prev</button>
+        <button id="todayBtn" type="button" class="btn btn-primary-today btn-xs" data-calendar-nav="today">Today</button>
+        <button id="nextBtn" type="button" class="btn btn-primary btn-xs" data-calendar-nav="next">Next >></button>		
+	</div> 
+    <div id="calendarDiv" class="container">
+        <div class="page-header">
+            <h2></h2>
+        </div>
+        <div class="modal fade" id="events-modal">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h3 class="modal-title"></h3>
+                    </div>
+                    <div class="modal-body" style="height: 400px"></div>
+                    <div class="modal-footer">
+                        <a href="#" data-dismiss="modal" class="btn">Close</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="span9">
+                <div id="calendar"></div>
+            </div>
+        </div>
+    </div>
+    <div id="tableDiv" class="col-md-6">
+        <table style="text-align: left;" class="table table-striped">
+            <thead>
+                <tr>
+                    <th class="headers">Name</th>
+                    <th class="headers">Start Date</th>
+                    <th class="headers">End Date</th>
+                    <th class="headers">Event URL</th>
+                    <th class="headers">Description</th>
+                </tr>
+            </thead>
+            <tbody id="reqTable"></tbody>
+        </table>
+    </div>
+    <div id="printDiv">
+    	<div id="mthSelector">
+	    	<span id="selectorTxt">Select a Month: </span>
+	    	<select id="mthDropdwn">
+	    		<option value="noVal">Select a Month</option>
+	    		<option value="January">January</option>
+	    		<option value="February">February</option>
+	    		<option value="March">March</option>
+	    		<option value="April">April</option>
+	    		<option value="May">May</option>
+	    		<option value="June">June</option>
+	    		<option value="July">July</option>
+	    		<option value="August">August</option>
+	    		<option value="September">September</option>
+	    		<option value="October">October</option>
+	    		<option value="November">November</option>
+	    		<option value="December">December</option>
+	    	</select>
+    	</div>
+    	<div id="3-mth-cals"></div>
+    </div>    
+    <div id="add-event-cntnr">
+        <div id="form-container" class="form-wrapper">
+            <div id="form-main" class="form-main content-box">
+                <div class="span-20 prepend-top last">
+                    <h1>Add an Event</h1>
+                </div>
+                <div class="prepend-1 span-6 boxSpacing">
+                    <label for="eventName">Event Name</label>
+                    <input id="eventName" type="text" class="span-6" />
+                </div>          
+                <div class="span-6 boxSpacing center-box">
+                    <label for="eventStartDate">Event Start Date</label>
+                    <input id="eventStartDate" type="text" readonly="readonly" placeholder="MM/DD/YYYY" value="MM/DD/YYYY" maxlength="10" />
+                </div>
+                <div class="span-6 boxSpacing last">
+                    <label for="eventEndDate">Event End Date</label>
+                    <input id="eventEndDate" type="text" readonly="readonly" placeholder="MM/DD/YYYY" value="MM/DD/YYYY" maxlength="10" />
+                </div>
+                <div class="prepend-1 span-6 boxSpacing">
+                    <label for="colorCode">Color Code</label>
+                    <select id="colorCode" class="span-6">
+						<option value="black">black</option>
+						<option value="blue">blue</option>
+						<option value="red">red</option>
+						<option value="orange">orange</option>
+						<option value="purple">purple</option>
+						<option value="green">green</option>
+					</select>
+                </div>
+                <div class="span-6 boxSpacing">
+                    <label for="eventMedia">Event URL</label>
+                    <input id="eventMedia" type="text" class="span-6" />
+                </div>
+                <div class="span-6 boxSpacing">
+                    <label for="eventImportance">Event Importance</label>
+                    <select id="eventImportance" class="span-custom">
+						<option value="Low">Low</option>
+						<option value="Medium">Medium</option>
+						<option value="High">High</option>                    
+                    </select>
+                </div>
+                <div class="prepend-1 span-18 append-1 last boxSpacing">
+                    <label for="fullSum">Event Summary</label>
+                    <textarea id="fullSum" class="req span-18"></textarea>
+                </div> 
+                <div class="span-5 prepend-5 prepend-top">
+                    <button id="btnsave" type="button" class="savebtn">
+						Save
+					</button>
+                </div>
+                <div class="span-5 append-5 prepend-top append-bottom last">
+                    <button id="btncancel" type="button" class="cancelbtn">
+						Cancel
+					</button>
+                </div>            
+            </div>
+        </div>
+	</div>
+	<div id="edit-event-cntnr">
+        <div id="form-container" class="form-wrapper">
+            <div id="form-main" class="form-main content-box">
+                <div class="span-20 prepend-top last">
+                    <h1>Event Details</h1>
+                </div>
+                <div class="prepend-1 span-6 boxSpacing">
+                    <label for="editName">Event Name</label>
+                    <input id="editName" type="text" class="span-6" />
+                </div>          
+                <div class="span-6 boxSpacing center-box">
+                    <label for="editStartDate">Event Start Date</label>
+                    <input id="editStartDate" type="text" readonly="readonly" placeholder="MM/DD/YYYY" value="MM/DD/YYYY" maxlength="10" />
+                </div>
+                <div class="span-6 boxSpacing last">
+                    <label for="editEndDate">Event End Date</label>
+                    <input id="editEndDate" type="text" readonly="readonly" placeholder="MM/DD/YYYY" value="MM/DD/YYYY" maxlength="10" />
+                </div>
+                <div class="prepend-1 span-6 boxSpacing">
+                    <label for="editColor">Color Code</label>
+                    <select id="editColor" class="span-6">
+						<option value="black">black</option>
+						<option value="blue">blue</option>
+						<option value="red">red</option>
+						<option value="orange">orange</option>
+						<option value="purple">purple</option>
+						<option value="green">green</option>
+					</select>
+                </div>
+                <div class="span-6 boxSpacing">
+                    <label for="editUrl">Event URL</label>
+                    <input id="editUrl" type="text" class="span-6" />
+                </div>
+                <div class="span-6 boxSpacing">
+                    <label for="editImportance">Event Importance</label>
+                    <select id="editImportance" class="span-custom">
+						<option value="Low">Low</option>
+						<option value="Medium">Medium</option>
+						<option value="High">High</option>                    
+                    </select>
+                </div>
+                <div class="prepend-1 span-18 append-1 last boxSpacing">
+                    <label for="editSum">Event Summary</label>
+                    <textarea id="editSum" class="req span-18"></textarea>
+                </div> 
+                <div class="span-5 prepend-5 prepend-top">
+                    <button id="saveEdits" type="button" class="savebtn">
+						Save
+					</button>
+                </div>
+               <div class="span-5 append-5 prepend-top">
+                    <button id="deleteItem" type="button" class="deletebtn">
+						Delete
+					</button>
+                </div>
+                <div class="span-5 append-5 prepend-top append-bottom last">
+                    <button id="cancelEdits" type="button" class="cancelbtn">
+						Cancel
+					</button>
+                </div>            
+            </div>
+        </div>
+	</div>     
+</body>
+</html>
